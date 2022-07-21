@@ -1,14 +1,15 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class DialogSystem : MonoBehaviour
 {
     //File로 읽기:Asset 한 단계 상위 폴더에서 시작
-    public static readonly string DIALOG_JSON_BASE_PATH = "Assets/Resources/Table/Dialogue/";
 
-
+    public static readonly string DIALOG_JSON_BASE_PATH = "Assets/Utils/Dialog/Jsons/";
 
     public static DialogSystem Instance;
     public GameObject DialogCanvasPrefab;
@@ -36,13 +37,22 @@ public class DialogSystem : MonoBehaviour
         }
         return dialogCanvas;
     }
+    private void CheckEventSystem()
+    {
+        //다이얼로그는 해당 씬에 EventSystem이 있어야 동작함.
+        if (FindObjectOfType<EventSystem>() == null)
+        {
+            var eventSystem = new GameObject("EventSystem", typeof(EventSystem), typeof(StandaloneInputModule));
+        }
+    }
 
-    public void StartDialog(string dialogFileName)
+    public void StartDialog(string dialogFileName, Action callback)
     {
         //새 바텀 다이얼로그 생성
         GameObject dialogCanvas = CreateDialogCanvas();
         if (dialogCanvas)
         {
+            CheckEventSystem();
             GameObject bottomDialog = CreateBottomDialog(dialogCanvas);
 
             //Json 파일에서 {dialogueFileCode}.json에 해당하는 대화 파일을 읽어옴.
@@ -50,7 +60,7 @@ public class DialogSystem : MonoBehaviour
             DialogueData[] dialogPack = JsonUtility.FromJson<Serialization<DialogueData>>(jstring).list;
 
 
-            bottomDialog.GetComponent<BottomDialog>().StartDialogue(dialogPack);
+            StartCoroutine(bottomDialog.GetComponent<BottomDialog>().StartDialogue(dialogPack, callback));
         }
 
     }

@@ -1,0 +1,62 @@
+{
+	"list": [
+		{
+			"code": 1,
+			"speakerName": "",
+			"text": "오오, 이게 가상현실 게임기인가 보구나.",
+			"next": 0
+		},
+		{
+			"code": 2,
+			"speakerName": "",
+			"text": "좋아, 어디 한 번 해볼까?",
+			"conditions": [
+				{
+					"text": "No",
+					"next": 3
+				},
+				{
+					"text": "Yes",
+					"next": 4
+				}
+			]
+		},
+		{
+			"code": 3,
+			"speakerName": "",
+			"text": "아니, 누가 뭐라 해도 난 게임을 할 거야!",
+			"next": 0
+		},
+		{
+			"code": 4,
+			"speakerName": "[시스템]",
+			"text": "게임에 접속합니다.",
+			"next": 0
+		},
+		{
+			"code": 5,
+			"speakerName": "[시스템]",
+			"text": "생체 데이터 확인 중.",
+			"next": 0
+		},
+		{
+			"code": 6,
+			"speakerName": "[시스템]",
+			"text": ". . .",
+			"delayOffset": 1000,
+			"next": 0
+		},
+		{
+			"code": 7,
+			"speakerName": "[시스템]",
+			"text": "확인 완료.",
+			"next": 0
+		},
+		{
+			"code": 8,
+			"speakerName": "[시스템]",
+			"text": "저장된 데이터가 없습니다. \n데이터 등록을 시작합니다.",
+			"next": -1
+		}
+	]
+}
