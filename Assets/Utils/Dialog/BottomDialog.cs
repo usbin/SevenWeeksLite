@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -69,11 +70,12 @@ public class BottomDialog : MonoBehaviour
     private IEnumerator dialogTask;
 
     private bool _skipDialogue = false;
-    public void StartDialogue(DialogueData[] dialoguePack)
+    public IEnumerator StartDialogue(DialogueData[] dialoguePack, Action callback)
     {
         this._dialogPack = dialoguePack;
         IEnumerator task = StartDialogueAsync(dialoguePack);
-        StartCoroutine(task);
+        yield return StartCoroutine(task);
+        callback.Invoke();
         
     }
     
@@ -87,6 +89,7 @@ public class BottomDialog : MonoBehaviour
     }
     IEnumerator WaitInput()
     {
+        //정해진 키 안에서 입력이 들어올 경우 리턴하는 함수.
         yield return null;
         bool up = false;
         bool down = false;
@@ -125,10 +128,10 @@ public class BottomDialog : MonoBehaviour
 
                 // - cursor에 해당하는 대화 내용(이름, 텍스트) 채우고
                 transform.GetChild(0).GetComponent<UnityEngine.UI.Text>().text = dialoguePack[cursor].speakerName;
-                yield return StartCoroutine(TypeDialog(transform.GetChild(1).GetComponent<UnityEngine.UI.Text>(), dialoguePack[cursor].text, 0.03f+dialoguePack[cursor].delayOffset*0.001f));
+                yield return StartCoroutine(TypeDialog(transform.GetChild(1).GetComponent<TextMeshProUGUI>(), dialoguePack[cursor].text, 0.03f+dialoguePack[cursor].delayOffset*0.001f));
 
                 // - 다음 대화가 있을 땐 깜빡거림 구현
-                GameObject nextArrow = transform.GetChild(0).GetChild(2).gameObject;
+                //GameObject nextArrow = transform.GetChild(0).GetChild(2).gameObject;
                 if (dialoguePack[cursor].next != -1)
                 {
                     
@@ -151,14 +154,14 @@ public class BottomDialog : MonoBehaviour
                     cursor = Array.FindIndex(dialoguePack, value => value.code == dialoguePack[cursor].next);
                     if (cursor == -1) Debug.LogError("존재하지 않는 대화 참조!");
                 }
-                Destroy(nextArrow);
+                //Destroy(nextArrow);
             }
             else
             {
                 //[2] 선택지일 경우
                 // - cursor의 text,name 에 해당하는 내용 채우고
                 transform.GetChild(0).GetComponent<UnityEngine.UI.Text>().text = dialoguePack[cursor].speakerName;
-                yield return StartCoroutine(TypeDialog(transform.GetChild(1).GetComponent<UnityEngine.UI.Text>(), dialoguePack[cursor].text, 0.03f + dialoguePack[cursor].delayOffset * 0.001f));
+                yield return StartCoroutine(TypeDialog(transform.GetChild(1).GetComponent<TextMeshProUGUI>(), dialoguePack[cursor].text, 0.03f + dialoguePack[cursor].delayOffset * 0.001f));
                 // - ConditionDialog 생성, cursor.conditions에 해당하는 내용 채우고
                 
                 GameObject conditionDialog = GameObject.Instantiate(conditionDialogPrefab);
@@ -221,10 +224,8 @@ public class BottomDialog : MonoBehaviour
                     cursoredBtn.Select();
                     Debug.Log("커서: " + conditionCursor);
                     waitConditionSelection = WaitInput(); //입력 코루틴 초기화
-                    yield return StartCoroutine(waitConditionSelection);
+                    yield return StartCoroutine(waitConditionSelection); // 입력 대기
                 }
-                
-                
                 
                 Destroy(conditionDialog.gameObject);
             }
@@ -234,7 +235,7 @@ public class BottomDialog : MonoBehaviour
         Destroy(gameObject);
         Destroy(transform.parent.gameObject);
     }
-    IEnumerator TypeDialog(Text textObject, string text, float delay)
+    IEnumerator TypeDialog(TextMeshProUGUI textObject, string text, float delay)
     {
         textObject.text = "";
         // 특정 초마다 한 글자씩 입력

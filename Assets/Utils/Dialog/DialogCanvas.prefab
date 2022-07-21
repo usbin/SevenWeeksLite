@@ -91,7 +91,7 @@ GameObject:
   - component: {fileID: -8195564871349915323}
   m_Layer: 3
   m_Name: DialogCanvas
-  m_TagString: Untagged
+  m_TagString: DialogCanvas
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
