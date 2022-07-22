@@ -16,9 +16,9 @@ public class Director : MonoBehaviour
             ItemUsageSystem.Instance.AddListener(1, (Player player) =>
             {
                 Debug.Log("아이템 사용함!");
-            });
-        }
-        
+        });
+    }
+
     }
 
     // Update is called once per frame
