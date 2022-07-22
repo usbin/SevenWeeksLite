@@ -87,7 +87,7 @@ public class BottomDialog : MonoBehaviour
         } while (!Control.IsPressDown(Control.KeyList.Interact));
         
     }
-    IEnumerator WaitInput()
+    IEnumerator WaitInput(GameObject lastSelect)
     {
         //정해진 키 안에서 입력이 들어올 경우 리턴하는 함수.
         yield return null;
@@ -99,6 +99,8 @@ public class BottomDialog : MonoBehaviour
             up = Control.IsPressDown(Control.KeyList.Up);
             down = Control.IsPressDown(Control.KeyList.Down);
             interact = Control.IsPressDown(Control.KeyList.Interact);
+
+            PreventFocusOutFromMouse(lastSelect);
             yield return null;
         }
         while (!up && !down && !interact);
@@ -106,6 +108,13 @@ public class BottomDialog : MonoBehaviour
         if (up) yield return Control.KeyList.Up;
         else if (down) yield return Control.KeyList.Down;
         else yield return Control.KeyList.Interact;
+    }
+    void PreventFocusOutFromMouse(GameObject lastSelect)
+    {
+        if (EventSystem.current != null && EventSystem.current.currentSelectedGameObject == null)
+        {
+            EventSystem.current.SetSelectedGameObject(lastSelect);
+        }
     }
     IEnumerator WaitSkipDialogue()
     {
@@ -200,15 +209,15 @@ public class BottomDialog : MonoBehaviour
                 cursoredBtn.Select();
 
                 // - 입력 대기
-                IEnumerator waitConditionSelection = WaitInput();
-                yield return StartCoroutine(waitConditionSelection);
-                //상호작용 키를 누르기 전까진 커서 이동만.
-                while ((Control.KeyList)waitConditionSelection.Current != Control.KeyList.Interact)
+                IEnumerator waitConditionSelection;
+                do
                 {
+                    waitConditionSelection = WaitInput(cursoredBtn.gameObject);
+                    yield return StartCoroutine(waitConditionSelection);
                     if ((Control.KeyList)waitConditionSelection.Current == Control.KeyList.Up)
                     {
                         conditionCursor = conditionCursor > 0 ? conditionCursor - 1 : 0;
-                        
+
                     }
                     if ((Control.KeyList)waitConditionSelection.Current == Control.KeyList.Down)
                     {
@@ -223,9 +232,11 @@ public class BottomDialog : MonoBehaviour
                     // - 버튼 커서 포커스
                     cursoredBtn.Select();
                     Debug.Log("커서: " + conditionCursor);
-                    waitConditionSelection = WaitInput(); //입력 코루틴 초기화
-                    yield return StartCoroutine(waitConditionSelection); // 입력 대기
                 }
+                while ((Control.KeyList)waitConditionSelection.Current != Control.KeyList.Interact);
+
+
+                
                 
                 Destroy(conditionDialog.gameObject);
             }

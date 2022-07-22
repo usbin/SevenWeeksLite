@@ -26,16 +26,19 @@ public class DialogSystem : MonoBehaviour
     }
     private GameObject CreateDialogCanvas()
     {
-        GameObject dialogCanvas = GameObject.FindGameObjectWithTag("DialogCanvas");
+        DialogCanvas dialogCanvas = FindObjectOfType<DialogCanvas>();
         if (dialogCanvas == null)
         {
-            if (DialogCanvasPrefab) dialogCanvas = Instantiate(DialogCanvasPrefab);
+            if (DialogCanvasPrefab != null)
+                dialogCanvas = Instantiate(DialogCanvasPrefab).GetComponent<DialogCanvas>();
             else
             {
                 Debug.Log("BottomDialogPrefab이 null입니다.");
+                return null;
             }
         }
-        return dialogCanvas;
+        GameObject dialogCanvasObj = dialogCanvas.gameObject;
+        return dialogCanvasObj;
     }
     private void CheckEventSystem()
     {
