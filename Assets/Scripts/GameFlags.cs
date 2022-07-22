@@ -7,6 +7,7 @@ public static class GameFlags
 {
     //플레이어 프리징 관리 변수 및 이벤트들
     //플레이어 프리징: 유저가 플레이어를 움직일 수 없게됨.
+    [SerializeField]
     private static int _playerFreeze=0;
     private static UnityEvent _onPlayerFreezed = new UnityEvent();
     private static UnityEvent _onPlayerUnfreezed = new UnityEvent();

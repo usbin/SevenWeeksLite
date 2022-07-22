@@ -7,10 +7,21 @@ public class Director : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        GameFlags.PlayerFreeze();
-        DialogSystem.Instance.StartDialog("Test", () => {
-            GameFlags.PlayerUnfreeze();
-        });
+        if (ItemUsageSystem.Instance)
+        {
+            ItemUsageSystem.Instance.AddListener(1, (Player player) =>
+            {
+                Debug.Log("아이템 사용함!");
+            });
+        }
+        if (DialogSystem.Instance)
+        {
+            DialogSystem.Instance.StartDialog("Test", () => {
+                Debug.Log("asdf");
+
+            });
+        }
+        
     }
 
     // Update is called once per frame
