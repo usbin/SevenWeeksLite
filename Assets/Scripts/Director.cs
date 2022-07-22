@@ -4,13 +4,21 @@ using UnityEngine;
 
 public class Director : MonoBehaviour
 {
-    // Start is called before the first frame update
+
+    private void Awake()
+    {
+        
+    }
     void Start()
     {
-        GameFlags.PlayerFreeze();
-        DialogSystem.Instance.StartDialog("Test", () => {
-            GameFlags.PlayerUnfreeze();
-        });
+        if (ItemUsageSystem.Instance)
+        {
+            ItemUsageSystem.Instance.AddListener(1, (Player player) =>
+            {
+                Debug.Log("아이템 사용함!");
+            });
+        }
+        
     }
 
     // Update is called once per frame

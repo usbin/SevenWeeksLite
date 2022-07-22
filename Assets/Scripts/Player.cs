@@ -8,7 +8,15 @@ public class Player : MonoBehaviour
     public float walkSpeed = 5f;
     public Vector3 velocity;
 
+    public void OnClickButton()
+    {
+        ItemData itemData = new ItemData();
+        itemData.Code = 1;
+        itemData.Name = "abc";
+        Item item = new Item(itemData);
+        item.Use(this);
 
+    }
     void OnMove()
     {
         int vectorX = Control.IsPressed(Control.KeyList.Left) ? -1

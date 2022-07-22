@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+
+[System.Serializable]
 public class GameEventListener : MonoBehaviour
 {
     public GameEvent Event;
@@ -15,4 +17,6 @@ public class GameEventListener : MonoBehaviour
 
     public void OnEventRaised()
     { Response.Invoke(); }
+
+    
 }

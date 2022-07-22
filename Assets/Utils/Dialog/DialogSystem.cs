@@ -67,8 +67,13 @@ public class DialogSystem : MonoBehaviour
 
     private void Awake()
     {
-        if (Instance != null) Destroy(this);
-        else Instance = this;
+        if (Instance != null)
+        {
+            Destroy(gameObject);
+            Destroy(this);
+            return;
+        }
+        Instance = this;
     }
     void Start()
     {
