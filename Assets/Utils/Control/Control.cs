@@ -11,7 +11,8 @@ public static class Control
         Right = KeyCode.RightArrow,
         Down = KeyCode.DownArrow,
         Left = KeyCode.LeftArrow,
-        Esc = KeyCode.Escape
+        Esc = KeyCode.Escape,
+        Inventory = KeyCode.Tab
     }
     public static Dictionary<KeyList, KeyCode> KeyBinds = new Dictionary<KeyList, KeyCode>()
     {
@@ -19,7 +20,9 @@ public static class Control
         { KeyList.Up, KeyCode.UpArrow },
         { KeyList.Right, KeyCode.RightArrow },
         { KeyList.Down, KeyCode.DownArrow },
-        { KeyList.Left, KeyCode.LeftArrow }
+        { KeyList.Left, KeyCode.LeftArrow },
+        { KeyList.Esc, KeyCode.Escape },
+        { KeyList.Inventory, KeyCode.Tab }
     };
     public static bool IsPressed(KeyList key)
     {

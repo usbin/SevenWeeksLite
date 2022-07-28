@@ -13,30 +13,37 @@ public class ItemUsageSystem : MonoBehaviour
     //이벤트 등록 함수.(아이템코드, Action)
     // - 이벤트를 등록하는 시점에 아이템 사용 이벤트가 초기화되어있지 않을 경우 고려.
     // - 이벤트 등록과 아이템 사용 이벤트의 초기화 시점을 독립적으로 구현해야함.
-    public void OnItemUse(Player player, int itemCode)
+    public bool OnItemUse(Player player, int itemCode)
     {
+
         if (!ItemTable.LoadDone)
         {
-            return;
+            Debug.Log("아이템 사용 에러: 아이템테이블이 아직 로드되지 않았습니다.");
+            return false;
         }
 
-        ItemData? itemData = ItemTable.GetItemData(itemCode);
-        if(itemData.HasValue)
+        ItemInfo? itemInfo = ItemTable.GetItemInfo(itemCode);
+        if(!itemInfo.HasValue)
         {
-            itemData.Value.UsageEvent.Raise(player);
+            Debug.Log("아이템 사용 에러: 아이템테이블에 없는 아이템 코드입니다.");
+            return false;
+            
         }
+        Debug.Log("아이템 사용됨! (" + ItemTable.GetItemInfo(itemCode).Value.Name);
+        itemInfo.Value.UsageEvent.Raise(player);
+        return true;
     }
-    public void AddListener(int itemCode, ItemUsageEventListener.ItemUsageEventHandler handler)
+    public void AddItemUsageListener(int itemCode, ItemUsageEventListener.ItemUsageEventHandler handler)
     {
         if (!ItemTable.LoadDone)
         {
             return;
         }
-        ItemData? itemData = ItemTable.GetItemData(itemCode);
-        if (itemData.HasValue)
+        ItemInfo? itemInfo = ItemTable.GetItemInfo(itemCode);
+        if (itemInfo.HasValue)
         {
-            ItemUsageEventListener listener = new ItemUsageEventListener(itemData.Value.UsageEvent, handler);
-            itemData.Value.UsageEvent.RegisterListener(listener);
+            ItemUsageEventListener listener = new ItemUsageEventListener(itemInfo.Value.UsageEvent, handler);
+            itemInfo.Value.UsageEvent.RegisterListener(listener);
         }
         
     }

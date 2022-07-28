@@ -6,11 +6,11 @@ using UnityEngine;
 [System.Serializable]
 public class ItemUsageEvent
 {
-    private Item _item;
+    private ItemInfo _itemInfo;
     private List<ItemUsageEventListener> _listeners = new List<ItemUsageEventListener>();
-    public ItemUsageEvent(Item item)
+    public ItemUsageEvent(ItemInfo item)
     {
-        _item = item;
+        _itemInfo = item;
     }
     public void RegisterListener(ItemUsageEventListener listener)
     {

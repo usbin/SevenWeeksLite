@@ -13,9 +13,8 @@ public class Director : MonoBehaviour
     {
         if (ItemUsageSystem.Instance)
         {
-            ItemUsageSystem.Instance.AddListener(1, (Player player) =>
+            ItemUsageSystem.Instance.AddItemUsageListener(1, (Player player) =>
             {
-                Debug.Log("아이템 사용함!");
             });
         }
         if (DialogSystem.Instance)
@@ -25,6 +24,8 @@ public class Director : MonoBehaviour
 
             });
         }
+
+
         
     }
 

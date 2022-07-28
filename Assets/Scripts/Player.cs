@@ -4,20 +4,35 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-
     public float walkSpeed = 5f;
     public Vector3 velocity;
+    private PlayerData _playerData;
+    public InventoryData InventoryData
+    {
+        get => _playerData.InventoryData;
+    }
 
     public void OnClickButton()
     {
-        ItemData itemData = new ItemData();
-        itemData.Code = 1;
-        itemData.Name = "abc";
-        Item item = new Item(itemData);
+        ItemInfo ItemInfo = new ItemInfo();
+        ItemInfo.Code = 1;
+        ItemInfo.Name = "abc";
+        ItemData item = new ItemData(ItemInfo, 1);
         item.Use(this);
 
+
     }
-    void OnMove()
+    public void OnPressMenuKey()
+    {
+        if (Control.IsPressDown(Control.KeyList.Esc))
+        {
+            if (MenuSystem.Instance != null)
+            {
+                MenuSystem.Instance.OpenMenu(this);
+            }
+        }
+    }
+    void Move()
     {
         int vectorX = Control.IsPressed(Control.KeyList.Left) ? -1
                 : Control.IsPressed(Control.KeyList.Right) ? 1
@@ -49,6 +64,18 @@ public class Player : MonoBehaviour
         }
     }
 
+    private void Awake()
+    {
+        //PlayerData 불러오기(이름, 인벤토리 정보 등)
+        _playerData = SaveFileManager.LoadPlayerData();
+        if(_playerData != null)
+        {
+            Debug.Log("플레이어 데이터 불러옴!");
+        }
+
+        DontDestroyOnLoad(this);
+
+    }
 
     void Start()
     {
@@ -59,8 +86,8 @@ public class Player : MonoBehaviour
     {
         if (!GameFlags.PlayerFreezed)
         {
-            OnMove();
-
+            Move();
+            OnPressMenuKey();
         }
     }
 }

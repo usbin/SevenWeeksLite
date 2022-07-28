@@ -5,30 +5,44 @@ using UnityEngine;
 
 public static class ItemTable
 {
-    public static readonly string ITEM_JSON_PATH = "Assets/Utils/ConsumableItem/Jsons/";
-
-    public static bool LoadDone = false;
-    [SerializeField]
-    private static IDictionary<int, Item> _itemList = new Dictionary<int, Item>();
-
-    public static ItemData? GetItemData(int itemCode)
+    public static readonly string ITEM_JSON_PATH = "Assets/Utils/ConsumableItem/Jsons/"; //프로젝트 루트폴더부터 시작
+    public static readonly string ITEM_SPRITE_PATH = "Sprites/Item/"; //Resources/부터 시작
+    private static bool _loadDone = false;
+    public static bool LoadDone
     {
-        if (_itemList.ContainsKey(itemCode))
-            return _itemList[itemCode].ItemData;
+        get => _loadDone;
+    }
+    [SerializeField]
+    private static IDictionary<int, ItemInfo> _itemDictionary = new Dictionary<int, ItemInfo>();
+
+    public static ItemData GenerateItemData(int itemCode, int amount)
+    {
+        if (!LoadDone) LoadItems();
+        if (_itemDictionary.ContainsKey(itemCode))
+        {
+            return new ItemData(_itemDictionary[itemCode], amount);
+        }
+        else return null;
+    }
+    public static ItemInfo? GetItemInfo(int itemCode)
+    {
+        if (!LoadDone) LoadItems();
+
+        if (_itemDictionary.ContainsKey(itemCode))
+            return _itemDictionary[itemCode];
         else return null;
     }
     public static void LoadItems()
     {
         //Json 파일에서 Items.json 파일을 읽어옴.
         string jstring = File.ReadAllText(ITEM_JSON_PATH + "Items.json", System.Text.Encoding.UTF8);
-        ItemData[] itemDataList = JsonUtility.FromJson<Serialization<ItemData>>(jstring).list;
+        ItemInfo[] itemInfoList = JsonUtility.FromJson<Serialization<ItemInfo>>(jstring).list;
 
-        foreach (ItemData itemData in itemDataList)
+        for(int i=0; i<itemInfoList.Length; i++)
         {
-            Item item = new Item(itemData);
-            item.ItemData.UsageEvent = new ItemUsageEvent(item);
-            _itemList.Add(itemData.Code, item);
+            itemInfoList[i].UsageEvent = new ItemUsageEvent(itemInfoList[i]);
+            _itemDictionary.Add(itemInfoList[i].Code, itemInfoList[i]);
         }
-        LoadDone = true;
+        _loadDone = true;
     }
 }

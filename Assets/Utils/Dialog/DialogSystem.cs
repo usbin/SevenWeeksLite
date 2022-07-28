@@ -21,7 +21,7 @@ public class DialogSystem : MonoBehaviour
     private GameObject CreateBottomDialog(GameObject dialogCanvas)
     {
         GameObject bottomDialog = Instantiate(BottomDialogPrefab);
-        bottomDialog.transform.SetParent(dialogCanvas.transform, false);
+        bottomDialog.transform.SetParent(dialogCanvas.transform.GetChild(0), false);
         return bottomDialog;
     }
     private GameObject CreateDialogCanvas()

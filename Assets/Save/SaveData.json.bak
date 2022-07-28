@@ -1,0 +1,13 @@
+{
+	"Name" : "가도",
+	"Inventory" : [
+	{
+		"Code" : 1,
+		"Amount" : 2
+	},
+	{
+		"Code" : 2,
+		"Amount" : 5
+	}
+	]
+}
